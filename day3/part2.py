@@ -1,29 +1,23 @@
 import re
 
-file = open('data.txt')
+with open("data.txt") as f:
+    my_input = f.read()
 
-my_input = file.read()
+pattern = r"(mul\((\d{1,3}),(\d{1,3})\))|(don\'t\(\))|(do\(\))"
+matches = re.finditer(pattern, my_input)
 
+result = 0
+enabled = True
 
-def extract_factors(_input):
-    pattern = r"mul\((\d{1,3}),(\d{1,3})\)"
-    matches = re.findall(pattern, _input)
-    factors = [(int(a), int(b)) for a, b in matches]
-    print(matches)
-    return factors
+for match in matches:
+    if match.group(4):
+        enabled = False
+        continue
+    elif match.group(5):
+        enabled = True
+        continue
+    if enabled:
+        result += int(match.group(2)) * int(match.group(3))
+    print(match, enabled)
 
-def calc(_input):
-    factors = extract_factors(_input)
-    result = 0
-    for i in range(len(factors)):
-        result += factors[i][0] * factors[i][1]
-    return result
-
-def remove_dont_parts(_input):
-    _input += 'do()'
-    _input = re.sub(r'don\'t\(\).+?do\(\)', '', _input)
-    print(_input)
-    return _input
-
-
-print(calc(remove_dont_parts(my_input)))
+print(result)
