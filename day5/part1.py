@@ -1,6 +1,3 @@
-# D
-from operator import index
-
 with open("data.txt") as f:
     rules_str, updates_str = f.read().split("\n\n")
 
